@@ -54,12 +54,11 @@ client.on("message", async message => {
         song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
         console.log(song)
     }
-    else if (message.content.startsWith(`${prefix}reset`)) {
-        song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
-        console.log(song)
-    }
     else if (message.content.startsWith(`${prefix}toggle`)) {
         isOn = !isOn;
+        if (newUserChannel !== ''){
+            newUserChannel.leave();
+        } 
     }
 });
 
