@@ -17,15 +17,31 @@ client.once("disconnect", () => {
 });
 
 let newUserChannel = ''
-let song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
-let isOn = true;
+let defaultSong = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
+//let isOn = true;
+
+let songMap = new Map();
+let booleanMap = new Map();
+
+client.on('guildCreate', guild => {
+    songMap.set(guild.id, defaultSong)
+    booleanMap.set(guild.id, true)
+})
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
+    if (booleanMap.get(newMember.guild.id) === undefined){
+        booleanMap.set(newMember.guild.id,true)
+        console.log('missing stuff')
+    }
+    if (songMap.get(newMember.guild.id) === undefined){
+        songMap.set(newMember.guild.id,defaultSong)
+        console.log('missing song')
+    }
     newUserChannel = newMember.channel;
     //let oldUserChannel = oldMember.channelID;
-     //pudi 
-     if (isOn){
-    try {
+    var song = songMap.get(newMember.guild.id)
+    if (booleanMap.get(newMember.guild.id)){
+        try {
         console.log("Joined vc with id "+newUserChannel);
         newUserChannel.join().then(connection => {
             console.log('played something')
@@ -47,18 +63,27 @@ client.on("message", async message => {
         newUserChannel.leave();
     }
     else if (message.content.startsWith(`${prefix}change`)) {
-        song = message.content.split(" ")[1]
-        console.log(song)
+        var temp = message.content.split(" ")[1]
+        songMap.set(message.guild.id,temp)
+        console.log(songMap.get(message.guild.id))
     }
     else if (message.content.startsWith(`${prefix}reset`)) {
-        song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
-        console.log(song)
+        //song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
+        songMap.set(message.guild.id,defaultSong)
+        console.log(songMap.get(message.guild.id))
     }
     else if (message.content.startsWith(`${prefix}toggle`)) {
-        isOn = !isOn;
+        if (booleanMap.get(message.guild.id) === undefined){
+            booleanMap.set(message.guild.id,true)
+            console.log('missing stuff')
+        }
+        else{booleanMap.set(message.guild.id,!booleanMap.get(message.guild.id))}
         if (newUserChannel !== ''){
             newUserChannel.leave();
         } 
+    }
+    else if (message.content.startsWith(`${prefix}help`)){
+        return message.channel.send("!change [youtube link] ")
     }
 });
 
