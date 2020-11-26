@@ -78,9 +78,7 @@ client.on("message", async message => {
             console.log('missing stuff')
         }
         else{booleanMap.set(message.guild.id,!booleanMap.get(message.guild.id))}
-        if (newUserChannel !== ''){
-            newUserChannel.leave();
-        } 
+        
     }
     else if (message.content.startsWith(`${prefix}help`)){
         return message.channel.send("!change [youtube link] ")
