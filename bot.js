@@ -18,11 +18,13 @@ client.once("disconnect", () => {
 
 let newUserChannel = ''
 let song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
+let isOn = true;
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
     newUserChannel = newMember.channel;
-    let oldUserChannel = oldMember.channelID;
+    //let oldUserChannel = oldMember.channelID;
      //pudi 
+     if (isOn){
     try {
         console.log("Joined vc with id "+newUserChannel);
         newUserChannel.join().then(connection => {
@@ -34,8 +36,8 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 
     } catch (err) {
         console.log(err);
+        }
     }
-    
 });
 
 client.on("message", async message => {
@@ -51,6 +53,13 @@ client.on("message", async message => {
     else if (message.content.startsWith(`${prefix}reset`)) {
         song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
         console.log(song)
+    }
+    else if (message.content.startsWith(`${prefix}reset`)) {
+        song = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
+        console.log(song)
+    }
+    else if (message.content.startsWith(`${prefix}toggle`)) {
+        isOn = !isOn;
     }
 });
 
