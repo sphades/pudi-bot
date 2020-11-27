@@ -22,9 +22,11 @@ let defaultSong = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
 let booleanMap = new Map();
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
-    //ideally just check that its someone joining the server\
+    //ideally just check that its someone joining the server
+    if (oldMember !== null) {
     if (!oldMember.channel.members.size-1){ //if only one in server, leave
         oldMember.channel.leave();
+        }
     }
     if (newMember.id === '781557440902463508') return; //if the new addition is the bot, ignore
     if (booleanMap.get(newMember.guild.id) === undefined) {
