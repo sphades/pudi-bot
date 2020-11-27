@@ -38,6 +38,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
         console.log('Add user');
     }
     newUserChannel = newMember.channel;
+    if (newUserChannel === null) return;
     //let oldUserChannel = oldMember.channel;
     console.log(newMember.member.id)
     console.log(newMember.member.displayName)
