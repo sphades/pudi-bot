@@ -67,8 +67,8 @@ client.on("message", async message => {
     }
     else if (message.content.startsWith(`${prefix}set`)) {
         var split = message.content.split(" ")
-        var user = split[1] + split[2]
-        var newSong = split[3]
+        var user = split[1]
+        var newSong = split[2]
         var userID = client.users.cache.find(u => u.tag === user).id;
         console.log(userID)
         users.set(userID, newSong)
