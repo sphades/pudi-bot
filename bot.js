@@ -16,57 +16,41 @@ client.once("disconnect", () => {
     console.log("Disconnect!");
 });
 
-const users = new Map();
+let users = new Map();
 let newUserChannel = ''
 let defaultSong = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
-let songMap = new Map();
+// let songMap = new Map();
 let booleanMap = new Map();
 
-client.on("guildMemberAdd", (member) => {
-    newUsers.set(member.id, member.user);
-});
-
-client.on("guildMemberRemove", (member) => {
-    if (newUsers.has(member.id)) newUsers.delete(member.id);
-});
-
 client.on('voiceStateUpdate', (oldMember, newMember) => {
+    if (newMember.id === '781557440902463508') return;
     if (booleanMap.get(newMember.guild.id) === undefined) {
         booleanMap.set(newMember.guild.id, true)
-        console.log('missing stuff')
+        console.log('Add Bool for this server')
     }
-    if (songMap.get(newMember.guild.id) === undefined) {
-        songMap.set(newMember.guild.id, defaultSong)
-        console.log('missing song')
-    }
-    if (users.get(newMember.id) === undefined){
-        users.set(newMember.id, defaultSong)
-        console.log('missing user');
+    // if (songMap.get(newMember.guild.id) === undefined) {
+    //     songMap.set(newMember.guild.id, defaultSong)
+    //     console.log('missing song')
+    // }
+    if (users.get(newMember.member.id) === undefined){
+        users.set(newMember.member.id, defaultSong)
+        console.log('Add user');
     }
     newUserChannel = newMember.channel;
-    let oldUserChannel = oldMember.channel;
-    // if(oldUserChannel === undefined && newUserChannel !== undefined) {
-        
-    //     // User Joins a voice channel
-   
-    //  } else if(newUserChannel === undefined){
-   
-    //    // User leaves a voice channel
-        
-    // }
-
-    var song = users.get(newMember.id)
+    //let oldUserChannel = oldMember.channel;
+    console.log(newMember.member.id)
+    console.log(newMember.member.displayName)
+    var song = users.get(newMember.member.id)
+    console.log(song)
     if (booleanMap.get(newMember.guild.id)) {
         try {
             console.log("Joined vc with id " + newUserChannel);
             newUserChannel.join().then(connection => {
-                console.log('played something')
-                connection.play(ytdl(song, { begin: '1m' })).on("finish", () => {
+                connection.play(ytdl(song)).on("finish", () => {
                     newUserChannel.leave();
-                    
+                    console.log('played something')
                 }).on("error", error => console.error(error));
             })
-
         } catch (err) {
             console.log(err);
         }
@@ -76,13 +60,15 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 client.on("message", async message => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
-    if (message.content.startsWith(`${prefix}pudipudi`)) {
+    if (message.content.startsWith(`${prefix}pudi`)) {
         newUserChannel.leave();
     }
     else if (message.content.startsWith(`${prefix}set`)) {
-        var user = message.content.split(" ")[1]
-        var newSong = message.content.split(" ")[2]
-        var userID = client.users.find(user).id;
+        var split = message.content.split(" ")
+        var user = split[1] + split[2]
+        var newSong = split[3]
+        var userID = client.users.cache.find(u => u.tag === user).id;
+        console.log(userID)
         users.set(userID, newSong)
         console.log(users.get(userID))
     }
@@ -92,9 +78,6 @@ client.on("message", async message => {
     // }
     else if (message.content.startsWith(`${prefix}toggle`)) {
         booleanMap.set(message.guild.id, !booleanMap.get(message.guild.id))
-    }
-    else if (message.content.startsWith(`${prefix}set`)) {
-        return message.channel.send("!change [youtube link] ")
     }
 });
 
