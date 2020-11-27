@@ -36,6 +36,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
             { //if only one in server, bot leave
                 oldMember.channel.leave();
             }
+        return
       }
     if (newMember.id === '781557440902463508') return; //if the new addition is the bot, ignore
     if (booleanMap.get(newMember.guild.id) === undefined) {
