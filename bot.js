@@ -24,6 +24,7 @@ let booleanMap = new Map();
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
     if (newMember.id === '781557440902463508') return;
+    if (newMember === null) return;
     if (booleanMap.get(newMember.guild.id) === undefined) {
         booleanMap.set(newMember.guild.id, true)
         console.log('Add Bool for this server')
