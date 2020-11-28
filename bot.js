@@ -37,36 +37,35 @@ client.on('voiceStateUpdate',  async (oldMember, newMember) => {
     if (important){
     newUserChannel = newMember.channel;
     if (newUserChannel === null) {
-        console.log('someone left')
+        console.log(`${oldMember.member.displayName} left`)
         if (oldMember.channel.members.size - 1 == 0) { //if only one in server, bot leave
             oldMember.channel.leave();
         }
         return
     }
     if (newMember.id === '781557440902463508') return; //if the new addition is the bot, ignore
-    if (newMember.id === '235088799074484224') return; //ignore music bot 
+    if (newMember.id === '235088799074484224') return; //ignore music bot, ideallt automatically repeat for bot tag
     if (booleanMap.get(newMember.guild.id) === undefined) {
         booleanMap.set(newMember.guild.id, true)
-        console.log('Add Bool for this server')
+        console.log(`Add Bool for ${newMember.guild.name}`)
     }
     if (await users.get(newMember.member.id) === undefined) {
         await users.set(newMember.member.id, defaultSong)
-        console.log('Add user');
+        console.log(`Added ${newMember.member.displayName} to database`);
     }
-
-    console.log(newMember.member.id)
-    console.log(newMember.member.displayName)
+    console.log(`${newMember.member.displayName} has joined. ID: ${newMember.member.id}`)
     var song = await users.get(newMember.member.id)
     await console.log(song)
     if (booleanMap.get(newMember.guild.id)) {
         try {
-            console.log("Joined vc with id " + newUserChannel);
             const connection = await newUserChannel.join()
             const dispatcher = await connection.play(ytdl(song, { filter: 'audioonly' }))
             dispatcher.on("finish", () => {
+                dispatcher.destroy();
                 newUserChannel.leave();
+                console.log("Bot left the server")
             })
-            dispatcher.on('error', console.error);
+            
         } catch (err) {
             console.log(err);
         }
@@ -78,12 +77,14 @@ client.on("message", async message => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
     if (message.content.startsWith(`${prefix}pudi`)) {
+        try{
         newUserChannel.leave();
+        console.log("Bot left the server")
+        } catch (err){console.log(err)}
     }
     else if (message.content.startsWith(`${prefix}set`)) {
         if (message.author.id !== message.guild.owner.id) {
-            //some message saying that your not the owner}
-            message.channel.send("You are not the owner.")
+            message.channel.send("Only owner can set music.")
             return;
         }
         try {
@@ -94,7 +95,7 @@ client.on("message", async message => {
             if (temp === undefined) { message.channel.send("User not found"); return }
             else {
                 let userID = temp.id
-                console.log(userID)
+                //console.log(userID)
                 await users.set(userID, newSong)
                 await console.log(users.get(userID))
                 await message.channel.send(`${newSong} set for ${client.users.cache.get(userID)}`)
@@ -106,10 +107,14 @@ client.on("message", async message => {
         }
     }
     else if (message.content.startsWith(`${prefix}toggle`)) {
+        if (message.author.id !== message.guild.owner.id) {
+            message.channel.send("Only owner can toggle bot.")
+            return;
+        }
         booleanMap.set(message.guild.id, !booleanMap.get(message.guild.id))
     }
     else if (message.content.startsWith(`${prefix}list`)) {
-        
+        //list all of the current configuration
     }
     else if (message.content.startsWith(`${prefix}reset`)){
         await users.clear();
