@@ -26,8 +26,8 @@ let booleanMap = new Map();
 client.on('voiceStateUpdate',  async (oldMember, newMember) => {
     let oldVoice = oldMember.channelID; 
     let newVoice = newMember.channelID;
-    console.log(oldVoice)
-    console.log(newVoice)
+    console.log("Old Channel ID:" + oldVoice)
+    console.log("New Channel ID:" + newVoice)
     let important = false; 
     if(oldVoice !== newVoice) {
         if(!oldMember.streaming && !oldMember.selfVideo && !newMember.streaming && !newMember.selfVideo){
@@ -97,7 +97,7 @@ client.on("message", async message => {
                 let userID = temp.id
                 //console.log(userID)
                 await users.set(userID, newSong)
-                await console.log(users.get(userID))
+                //await console.log(users.get(userID))
                 await message.channel.send(`${newSong} set for ${client.users.cache.get(userID)}`)
                 return
             }
