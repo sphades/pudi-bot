@@ -98,6 +98,7 @@ client.on("message", async message => {
                 await users.set(userID, newSong)
                 await console.log(users.get(userID))
                 await message.channel.send(`${newSong} set for ${client.users.cache.get(userID)}`)
+                return
             }
         }
         catch (err) {
