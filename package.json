@@ -23,6 +23,8 @@
     "ffmpeg": "0.0.4",
     "ffmpeg-static": "^4.2.7",
     "fluent-ffmpeg": "^2.1.2",
+    "keyv": "^4.0.3",
+    "keyv-file": "^0.2.0",
     "ytdl-core": "^4.1.0"
   }
 }
