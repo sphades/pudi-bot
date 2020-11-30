@@ -20,15 +20,15 @@ client.once("disconnect", () => {
 const users = new Keyv({store: new KeyvFile({filename:'storage.json',})});
 users.on('error', err => console.error('Keyv connection error:', err));
 let newUserChannel = ''
-let defaultSong = 'https://www.youtube.com/watch?v=KZ9l85fOq1Y'
+let defaultSong = 'https://www.youtube.com/watch?v=N3MSQupBcjo'
 let booleanMap = new Map();
 
 client.on('voiceStateUpdate',  async (oldMember, newMember) => {
     let oldVoice = oldMember.channelID; 
     let newVoice = newMember.channelID;
-    console.log("Old Channel ID:" + oldVoice)
-    console.log("New Channel ID:" + newVoice)
-    let important = false; 
+    console.log("Old Channel ID: " + oldVoice)
+    console.log("New Channel ID: " + newVoice)
+    let important = false; ``
     if(oldVoice !== newVoice) {
         if(!oldMember.streaming && !oldMember.selfVideo && !newMember.streaming && !newMember.selfVideo){
             important = true;
@@ -61,7 +61,8 @@ client.on('voiceStateUpdate',  async (oldMember, newMember) => {
             const connection = await newUserChannel.join()
             const dispatcher = await connection.play(ytdl(song, { filter: 'audioonly' }))
             dispatcher.on("finish", () => {
-                dispatcher.destroy();
+                dispatcher
+                .destroy();
                 newUserChannel.leave();
                 console.log("Bot left the server")
             })
@@ -84,7 +85,7 @@ client.on("message", async message => {
     }
     else if (message.content.startsWith(`${prefix}set`)) {
         if (message.author.id !== message.guild.owner.id) {
-            message.channel.send("Only owner can set music.")
+            await message.channel.send("Only owner can set music.")
             return;
         }
         try {
