@@ -7,6 +7,7 @@ const client = new Discord.Client();
 
 client.once("ready", () => {
     console.log("Ready!");
+    console.log("I like pudi");
 });
 
 client.once("reconnecting", () => {
@@ -28,7 +29,7 @@ client.on('voiceStateUpdate',  async (oldMember, newMember) => {
     let newVoice = newMember.channelID;
     console.log("Old Channel ID: " + oldVoice)
     console.log("New Channel ID: " + newVoice)
-    let important = false; ``
+    let important = false; 
     if(oldVoice !== newVoice) {
         if(!oldMember.streaming && !oldMember.selfVideo && !newMember.streaming && !newMember.selfVideo){
             important = true;
