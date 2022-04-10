@@ -18,3 +18,5 @@ jboss/server/minimal/work/**/*
 
 *.DEPLOYED
 node_modules/
+
+config.json
